@@ -1,0 +1,69 @@
+$ bash run_all.sh
++ nvidia-smi
+Mon Oct 19 13:45:14 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.178.04             Driver Version: 580.178.04     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX PRO 6000 Blac...    On  |   <bus-id> Off |                   On |
+| N/A   20C    P8             32W /  600W |                  N/A   |     N/A      Default |
+|                                         |                        |              Enabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| MIG devices:                                                                            |
++------------------+----------------------------------+-----------+-----------------------+
+| GPU  GI  CI  MIG |              Shared Memory-Usage |        Vol|        Shared         |
+|      ID  ID  Dev |                Shared BAR1-Usage | SM     Unc| CE ENC  DEC  OFA  JPG |
+|                  |                                  |        ECC|                       |
+|==================+==================================+===========+=======================|
+|  0    3   0   0  |              64MiB / 24192MiB    | 46      0 |  1   1    1    0    1 |
+|                  |               0MiB /  8327MiB    |           |                       |
++------------------+----------------------------------+-----------+-----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
++ nvcc --version
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2025 NVIDIA Corporation
+Built on Fri_Feb_21_20:23:50_PST_2025
+Cuda compilation tools, release 12.8, V12.8.93
+Build cuda_12.8.r12.8/compiler.35583870_0
++ nvcc -O2 -arch=native vector_add.cu -o ~/build/vector_add
++ ~/build/vector_add
+N = 50000000 floats (200 MB per array)
+CPU loop   :    71.91 ms
+GPU kernel :     1.61 ms
+Speedup    :     44.6x
+Check      : PASS (0 wrong)
++ nvcc -O2 -arch=native beginner_error.cu -o ~/build/beginner_error
++ ~/build/beginner_error
+[BAD ] fill<<<..., 2048>>>  (block size too big)
+       h[0] = 0  (expected 7)  <- 아무 에러 메시지 없이 틀린 값
+[FIX ] cudaGetLastError() -> invalid configuration argument
+[GOOD] fill<<<..., 256>>>
+       launch -> no error
+       h[0] = 7  (expected 7)
+[BAD ] timing without sync : 0.12 ms (너무 빠름 = 거짓말)
+[FIX ] timing with cudaDeviceSynchronize : 35.18 ms
++ python torch_matmul.py
+torch 2.8.0+cu128 | CUDA available: True
+GPU: NVIDIA RTX PRO 6000 Blackwell Server Edition MIG 1g.24gb
+matmul 4096x4096  CPU:    896.5 ms
+matmul 4096x4096  GPU:     7.44 ms
+Speedup: 120x   (max abs diff 0.001, FP32/TF32 rounding)
+
+== second run of vector_add (repeatability) ==
+N = 50000000 floats (200 MB per array)
+CPU loop   :    62.78 ms
+GPU kernel :     1.62 ms
+Speedup    :     38.9x
+Check      : PASS (0 wrong)
