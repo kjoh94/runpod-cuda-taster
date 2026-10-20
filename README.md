@@ -3,14 +3,6 @@
 **RunPod에서 10분 만에 CUDA 맛보기** — GPU가 없어도 클라우드 GPU 하나 빌려서 첫 CUDA 프로그램을 돌려 보는 초보자용 예제입니다.
 **A 10-minute CUDA taster on RunPod** — rent one cloud GPU and run your first CUDA program, no local GPU needed.
 
-## 영상 / Videos
-
-- 한국어 본편: <https://youtu.be/U2VZT2jFJgo>
-- 한국어 Shorts: <https://youtube.com/shorts/LihhVYCMQJM>
-- English full tutorial: <https://youtu.be/3bGNNVeXUiQ>
-- English Shorts: <https://youtube.com/shorts/VeQC7OlXWLc>
-- 블로그 / Blog: <https://kjoh94.github.io/blog/2026/10/19/runpod-cuda-taster/>
-
 | 파일 / File | 내용 / What it does |
 |---|---|
 | `vector_add.cu` | 5천만 개 float 벡터 덧셈: CPU for 루프 vs GPU 커널, `cudaEvent` 시간 측정, 정답 확인 / 50M-float vector add, CPU loop vs GPU kernel, cudaEvent timing, correctness check |
